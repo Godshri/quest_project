@@ -1,4 +1,5 @@
 {% extends 'quest_app/base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="victory">
@@ -6,5 +7,48 @@
     <p>Ты успешно прошел все испытания и стал настоящим Мастером Кода!</p>
     <div class="trophy">🏆</div>
     <p>С Днем Программиста!</p>
+    
+    <div class="victory-actions">
+        <a href="{% url 'game' %}" class="pixel-button">🔄 Играть снова</a>
+        <a href="{% url 'index' %}" class="pixel-button">🏠 На главную</a>
+        <button id="mute-button" class="pixel-button">🔊</button>
+    </div>
 </div>
-{% endblock %}
+
+<audio id="victory-music" loop>
+    <source src="{% static 'quest_app/audio/victory_music.mp3' %}" type="audio/mpeg">
+</audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Воспроизводим победную музыку
+    const victoryMusic = document.getElementById('victory-music');
+    if (victoryMusic) {
+        victoryMusic.volume = 0.4;
+        victoryMusic.play().catch(e => {
+            console.log('Автовоспроизведение заблокировано, ждем клика');
+        });
+    }
+    
+    // Управление звуком
+    let isMuted = false;
+    const muteButton = document.getElementById('mute-button');
+    
+    if (muteButton) {
+        muteButton.addEventListener('click', function() {
+            isMuted = !isMuted;
+            if (victoryMusic) {
+                victoryMusic.muted = isMuted;
+            }
+            muteButton.textContent = isMuted ? '🔇' : '🔊';
+        });
+    }
+    
+    // Автовоспроизведение при клике
+    document.addEventListener('click', function() {
+        if (victoryMusic && victoryMusic.paused) {
+            victoryMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
+        }
+    }, { once: true });
+});
+</script>

@@ -2,34 +2,141 @@
 {% load static %}
 
 {% block content %}
-<div class="room">
-    <h2>Комната: {{ room_name }}</h2>
-    
-   <div class="room-image-wrapper">
-    <div class="room-image {{ room }}" style="{% if room %}background-image: url('{% static 'quest_app/img/' %}{{ room }}.png');{% endif %}">
-        <!-- Текст заглушки через CSS -->
-    </div>
-</div>
-    
-    <div class="puzzles">
-        {% for puzzle in puzzles %}
-        <div class="puzzle">
-            <h3>🧩 {{ puzzle.name }}</h3>
-            <p>{{ puzzle.description }}</p>
-            <form class="puzzle-form" data-puzzle-id="{{ puzzle.id }}">
-                {% csrf_token %}
-                <input type="text" name="answer" class="pixel-input" placeholder="Ваш ответ...">
-                <button type="submit" class="pixel-button">Проверить</button>
-            </form>
-        </div>
+<div class="game-interface">
+    <!-- Полоска жизней -->
+    <div class="hearts-bar">
+        <span>Жизни: </span>
+        {% for i in "x"|ljust:total_hearts %}
+            <span class="heart {% if forloop.counter0 >= player.hearts %}broken{% endif %}">❤️</span>
         {% endfor %}
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-text">
+            Прогресс: {{ player.solved_puzzles|length }}/{{ total_puzzles }} загадок
+        </div>
+        <div class="progress-fill" style="width: {{ progress_percent }}%"></div>
+    </div>
+
+    <div class="room">
+        <h2>{{ room_name }}</h2>
+        
+        <div class="room-image-wrapper">
+            <div class="room-image {{ room }}" style="background-image: url('{% static 'quest_app/img/' %}{{ room }}.png');">
+            </div>
+        </div>
+        
+        <div class="puzzles">
+            {% for puzzle in puzzles %}
+            <div class="puzzle" data-difficulty="{{ puzzle.difficulty }}">
+                <h3>🧩 Уровень {{ puzzle.difficulty }}: {{ puzzle.name }}</h3>
+                <p>{{ puzzle.description }}</p>
+                <form class="puzzle-form" data-puzzle-id="{{ puzzle.id }}">
+                    {% csrf_token %}
+                    <input type="text" name="answer" class="pixel-input" placeholder="Твой ответ...">
+                    <button type="submit" class="pixel-button">🔍 Проверить</button>
+                </form>
+                <div class="result-message"></div>
+            </div>
+            {% empty %}
+            <div class="welcome-message">
+                <h3>Добро пожаловать в квест!</h3>
+                <p>Выбери комнату для начала приключения. Помни - у тебя есть жизней!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="room-button" data-room="server">Серверная</button>
+        <button class="room-button" data-room="library">Библиотека</button>
+        <button class="room-button" data-room="arcade">Аркада</button>
+        <button class="room-button" data-room="roof" id="roof-button">Крыша</button>
     </div>
 </div>
 
-<div class="navigation">
-    <button class="room-button" data-room="server">Серверная</button>
-    <button class="room-button" data-room="library">Библиотека</button>
-    <button class="room-button" data-room="arcade">Аркадные автоматы</button>
-    <button class="room-button" data-room="roof">Крыша</button>
+<!-- Аудио элементы для каждой комнаты -->
+<audio id="bg-music-server" loop>
+    <source src="{% static 'quest_app/audio/server_music.mp3' %}" type="audio/mpeg">
+</audio>
+<audio id="bg-music-library" loop>
+    <source src="{% static 'quest_app/audio/library_music.mp3' %}" type="audio/mpeg">
+</audio>
+<audio id="bg-music-arcade" loop>
+    <source src="{% static 'quest_app/audio/arcade_music.mp3' %}" type="audio/mpeg">
+</audio>
+<audio id="bg-music-roof" loop>
+    <source src="{% static 'quest_app/audio/roof_music.mp3' %}" type="audio/mpeg">
+</audio>
+<audio id="bg-music-start" loop>
+    <source src="{% static 'quest_app/audio/start_music.mp3' %}" type="audio/mpeg">
+</audio>
+
+<audio id="success-sound">
+    <source src="{% static 'quest_app/audio/success.mp3' %}" type="audio/mpeg">
+</audio>
+<audio id="fail-sound">
+    <source src="{% static 'quest_app/audio/fail.mp3' %}" type="audio/mpeg">
+</audio>
+
+<div class="sound-controls">
+    <button id="mute-button" class="pixel-button">🔊</button>
 </div>
+
+<script>
+// Функция для смены музыки в зависимости от комнаты
+function changeRoomMusic(room) {
+    // Останавливаем все музыки
+    const allMusic = document.querySelectorAll('audio[id^="bg-music-"]');
+    allMusic.forEach(audio => {
+        audio.pause();
+        audio.currentTime = 0;
+    });
+    
+    // Включаем музыку для текущей комнаты
+    const roomMusic = document.getElementById(`bg-music-${room}`);
+    if (roomMusic) {
+        roomMusic.volume = 0.3; // Устанавливаем комфортную громкость
+        roomMusic.play().catch(e => console.log('Автовоспроизведение заблокировано:', e));
+    }
+}
+
+// Воспроизводим музыку текущей комнаты при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    const currentRoom = '{{ room }}';
+    changeRoomMusic(currentRoom);
+    
+    // Обработчик смены комнаты
+    document.querySelectorAll('.room-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const newRoom = this.dataset.room;
+            changeRoomMusic(newRoom);
+        });
+    });
+});
+
+// Управление звуком
+let isMuted = false;
+const muteButton = document.getElementById('mute-button');
+
+muteButton.addEventListener('click', function() {
+    isMuted = !isMuted;
+    const allAudio = document.querySelectorAll('audio');
+    allAudio.forEach(audio => {
+        audio.muted = isMuted;
+    });
+    muteButton.textContent = isMuted ? '🔇' : '🔊';
+});
+
+// Автовоспроизведение с пользовательским взаимодействием
+document.addEventListener('click', function() {
+    const currentRoom = '{{ room }}';
+    const roomMusic = document.getElementById(`bg-music-${currentRoom}`);
+    if (roomMusic && roomMusic.paused) {
+        roomMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
+    }
+}, { once: true });
+// Остальной JavaScript код для игры...
+</script>
+
 {% endblock %}

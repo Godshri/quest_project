@@ -1,0 +1,76 @@
+{% extends 'quest_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="game-over-screen">
+    <div class="game-over-content">
+        <h2>💀 Игра Окончена</h2>
+        <div class="broken-heart">💔</div>
+        <p>Твои сердца закончились! Но каждый программист знает - ошибки это возможность учиться!</p>
+        
+        <div class="stats">
+            <p>Решено загадок: {{ player.solved_puzzles|length }}/12</p>
+            <p>Осталось сердец: {{ player.hearts }}</p>
+        </div>
+
+        <div class="restart-options">
+            <button onclick="resetGame()" class="pixel-button">🔄 Начать Заново</button>
+            <a href="{% url 'index' %}" class="pixel-button">🏠 На Главную</a>
+            <button id="mute-button" class="pixel-button">🔊</button>
+        </div>
+    </div>
+</div>
+
+<audio id="game-over-music">
+    <source src="{% static 'quest_app/audio/game_over_music.mp3' %}" type="audio/mpeg">
+</audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Воспроизводим музыку проигрыша
+    const gameOverMusic = document.getElementById('game-over-music');
+    if (gameOverMusic) {
+        gameOverMusic.volume = 0.3;
+        gameOverMusic.play().catch(e => {
+            console.log('Автовоспроизведение заблокировано');
+        });
+    }
+    
+    // Управление звуком
+    let isMuted = false;
+    const muteButton = document.getElementById('mute-button');
+    
+    if (muteButton) {
+        muteButton.addEventListener('click', function() {
+            isMuted = !isMuted;
+            if (gameOverMusic) {
+                gameOverMusic.muted = isMuted;
+            }
+            muteButton.textContent = isMuted ? '🔇' : '🔊';
+        });
+    }
+    
+    // Автовоспроизведение при клике
+    document.addEventListener('click', function() {
+        if (gameOverMusic && gameOverMusic.paused) {
+            gameOverMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
+        }
+    }, { once: true });
+});
+
+function resetGame() {
+    fetch('/game/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            action: 'reset_game'
+        })
+    }).then(() => {
+        location.reload();
+    });
+}
+</script>
+{% endblock %}

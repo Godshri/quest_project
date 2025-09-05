@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Воспроизведение музыки
+    const bgMusic = document.getElementById('bg-music');
+    const successSound = document.getElementById('success-sound');
+    const failSound = document.getElementById('fail-sound');
+    
+    // Попытка воспроизвести музыку при взаимодействии пользователя
+    document.addEventListener('click', function() {
+        if (bgMusic.paused) {
+            bgMusic.volume = 0.3;
+            bgMusic.play().catch(() => {});
+        }
+    }, { once: true });
+
     // Обработка решения головоломок
     const puzzleForms = document.querySelectorAll('.puzzle-form');
     puzzleForms.forEach(form => {
@@ -7,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const formData = new FormData(this);
             const answer = formData.get('answer');
             const puzzleId = this.dataset.puzzleId;
+            const resultMessage = this.querySelector('.result-message');
             
             try {
                 const response = await fetch('/game/', {
@@ -23,13 +37,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 const data = await response.json();
+                
                 if (data.success) {
-                    alert('Поздравляем! Головоломка решена! 🎉');
+                    successSound.play();
+                    resultMessage.textContent = '✅ Правильно! Загадка решена!';
+                    resultMessage.className = 'result-message success';
                     this.remove();
-                    // Проверяем победу
                     checkVictory();
                 } else {
-                    alert('Неверный ответ. Попробуйте еще раз!');
+                    failSound.play();
+                    if (data.game_over) {
+                        window.location.href = '/game-over/';
+                    } else {
+                        resultMessage.textContent = '❌ Неверно! -1 сердце';
+                        resultMessage.className = 'result-message error';
+                        updateHearts(data.hearts);
+                    }
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -39,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Навигация по комнатам
     const roomButtons = document.querySelectorAll('.room-button');
+    const roofButton = document.getElementById('roof-button');
+    
     roomButtons.forEach(button => {
         button.addEventListener('click', async function() {
             const room = this.dataset.room;
@@ -59,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
                 if (data.success) {
                     location.reload();
+                } else if (data.message) {
+                    alert(data.message);
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -66,13 +93,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
+    function updateHearts(hearts) {
+        const heartElements = document.querySelectorAll('.heart');
+        heartElements.forEach((heart, index) => {
+            if (index >= hearts) {
+                heart.classList.add('broken');
+            }
+        });
+    }
+    
     function checkVictory() {
-        // Можно добавить проверку количества решенных головоломок
         const solvedPuzzles = document.querySelectorAll('.puzzle-form');
         if (solvedPuzzles.length === 0) {
-            setTimeout(() => {
-                window.location.href = '/victory/';
-            }, 2000);
+            // Проверяем, все ли загадки решены
+            fetch('/victory/')
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/victory/';
+                    }
+                });
         }
     }
     

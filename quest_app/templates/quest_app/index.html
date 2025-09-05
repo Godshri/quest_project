@@ -1,17 +1,100 @@
 {% extends 'quest_app/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="pixel-welcome">
-    <h2>🐉 Добро пожаловать в Пиксельное Приключение! 🎮</h2>
-    <p>Отправляйся в увлекательное путешествие по миру программирования!</p>
-    
-    {% if user.is_authenticated %}
-        <a href="{% url 'game' %}" class="pixel-button">Продолжить Игру</a>
-    {% else %}
-        <div class="auth-buttons">
-            <a href="{% url 'admin:login' %}" class="pixel-button">Войти</a>
-            <p>Используйте учетную запись администратора</p>
+<div class="start-screen">
+    <div class="pixel-welcome">
+        <h2>🎮 Пиксельное Приключение Программиста 🐉</h2>
+        <div class="pixel-divider"></div>
+        
+        <div class="game-description">
+            <p>Приветствуем, будущий мастер кода! 🧙‍♂️</p>
+
+        <div class="character-selection">
+            <h3>Выбери своего героя:</h3>
+            <div class="characters">
+                <div class="character selected" data-char="wizard">
+                    <div class="char-icon">🧙‍♂️</div>
+                    <span>Волшебник Кода</span>
+                </div>
+                <div class="character" data-char="hacker">
+                    <div class="char-icon">👨‍💻</div>
+                    <span>Хакер</span>
+                </div>
+                <div class="character" data-char="robot">
+                    <div class="char-icon">🤖</div>
+                    <span>Робот-программист</span>
+                </div>
+            </div>
         </div>
-    {% endif %}
+
+        <a href="{% url 'game' %}" class="pixel-button start-button">🚀 Начать Квест!</a>
+        <audio id="main-menu-music" loop>
+            <source src="{% static 'quest_app/audio/main_menu_music.mp3' %}" type="audio/mpeg">
+        </audio>
+    
+    <button id="mute-button" class="pixel-button" style="position: fixed; top: 20px; right: 20px;">🔊</button>
+
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const characters = document.querySelectorAll('.character');
+    let selectedChar = 'wizard';
+    
+    characters.forEach(char => {
+        char.addEventListener('click', function() {
+            // Убираем выделение у всех
+            characters.forEach(c => c.classList.remove('selected'));
+            // Добавляем выделение выбранному
+            this.classList.add('selected');
+            selectedChar = this.dataset.char;
+            
+            // Можно сохранить выбор в localStorage или отправить на сервер
+            localStorage.setItem('selectedCharacter', selectedChar);
+        });
+    });
+    
+    // Восстанавливаем выбор при загрузке
+    const savedChar = localStorage.getItem('selectedCharacter');
+    if (savedChar) {
+        characters.forEach(char => {
+            char.classList.remove('selected');
+            if (char.dataset.char === savedChar) {
+                char.classList.add('selected');
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const mainMenuMusic = document.getElementById('main-menu-music');
+    const muteButton = document.getElementById('mute-button');
+    let isMuted = false;
+    
+    if (mainMenuMusic) {
+        mainMenuMusic.volume = 0.3;
+        mainMenuMusic.play().catch(e => {
+            console.log('Автовоспроизведение заблокировано');
+        });
+    }
+    
+    if (muteButton) {
+        muteButton.addEventListener('click', function() {
+            isMuted = !isMuted;
+            if (mainMenuMusic) {
+                mainMenuMusic.muted = isMuted;
+            }
+            muteButton.textContent = isMuted ? '🔇' : '🔊';
+        });
+    }
+    
+    document.addEventListener('click', function() {
+        if (mainMenuMusic && mainMenuMusic.paused) {
+            mainMenuMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
+        }
+    }, { once: true });
+});
+</script>
 {% endblock %}

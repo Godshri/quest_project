@@ -8,5 +8,5 @@ class PuzzleAdmin(admin.ModelAdmin):
 
 @admin.register(Player)
 class PlayerAdmin(admin.ModelAdmin):
-    list_display = ['user', 'current_room', 'created_at']
+    list_display = ['id', 'current_room', 'hearts', 'created_at']
     readonly_fields = ['created_at']
