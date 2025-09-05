@@ -1,0 +1,35 @@
+{% extends 'quest_app/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="room">
+    <h2>Комната: {{ room_name }}</h2>
+    
+   <div class="room-image-wrapper">
+    <div class="room-image {{ room }}" style="{% if room %}background-image: url('{% static 'quest_app/img/' %}{{ room }}.png');{% endif %}">
+        <!-- Текст заглушки через CSS -->
+    </div>
+</div>
+    
+    <div class="puzzles">
+        {% for puzzle in puzzles %}
+        <div class="puzzle">
+            <h3>🧩 {{ puzzle.name }}</h3>
+            <p>{{ puzzle.description }}</p>
+            <form class="puzzle-form" data-puzzle-id="{{ puzzle.id }}">
+                {% csrf_token %}
+                <input type="text" name="answer" class="pixel-input" placeholder="Ваш ответ...">
+                <button type="submit" class="pixel-button">Проверить</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="navigation">
+    <button class="room-button" data-room="server">Серверная</button>
+    <button class="room-button" data-room="library">Библиотека</button>
+    <button class="room-button" data-room="arcade">Аркадные автоматы</button>
+    <button class="room-button" data-room="roof">Крыша</button>
+</div>
+{% endblock %}

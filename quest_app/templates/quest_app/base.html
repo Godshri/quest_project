@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>День Программиста</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'quest_app/css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <header class="pixel-header">
+            <h1>🐉 Квест Дня Программиста 🎮</h1>
+            <div class="pixel-divider"></div>
+        </header>
+        
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        
+        <footer class="pixel-footer">
+            <div class="pixel-divider"></div>
+            <p>© 2025 Детский Технопарк. День Программиста</p>
+        </footer>
+    </div>
+    
+    <script src="{% static 'quest_app/js/game.js' %}"></script>
+</body>
+</html>
