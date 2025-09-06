@@ -3,15 +3,20 @@
 
 {% block content %}
 <div class="victory">
-    <h2>🎉 ПОЗДРАВЛЯЕМ! 🎉</h2>
+    <h2><i class="fa-solid fa-trophy fa-pixel fa-orange"></i> ПОЗДРАВЛЯЕМ! <i class="fa-solid fa-trophy fa-pixel fa-orange"></i></h2>
     <p>Ты успешно прошел все испытания и стал настоящим Мастером Кода!</p>
-    <div class="trophy">🏆</div>
+    <div class="trophy">
+        <i class="fa-solid fa-medal fa-pixel" style="font-size: 80px; color: #ff6b35;"></i>
+    </div>
     <p>С Днем Программиста!</p>
     
     <div class="victory-actions">
-        <a href="{% url 'game' %}" class="pixel-button">🔄 Играть снова</a>
-        <a href="{% url 'index' %}" class="pixel-button">🏠 На главную</a>
-        <button id="mute-button" class="pixel-button">🔊</button>
+        <a href="{% url 'game' %}" class="pixel-button">
+            <i class="fa-solid fa-rotate-right fa-pixel"></i> Играть снова
+        </a>
+        <a href="{% url 'index' %}" class="pixel-button">
+            <i class="fa-solid fa-house fa-pixel"></i> На главную
+        </a>
     </div>
 </div>
 
@@ -52,3 +57,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { once: true });
 });
 </script>
+{% endblock %}

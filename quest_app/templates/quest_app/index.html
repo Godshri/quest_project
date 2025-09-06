@@ -4,43 +4,56 @@
 {% block content %}
 <div class="start-screen">
     <div class="pixel-welcome">
-        <h2>🎮 Пиксельное Приключение Программиста 🐉</h2>
+         <h2>
+            <i class="fa-solid fa-gamepad fa-pixel fa-headered fa-blue"></i>
+            Приключение Программиста
+            <i class="fa-solid fa-dragon fa-pixel fa-headered fa-orange"></i>
+        </h2>
         <div class="pixel-divider"></div>
         
         <div class="game-description">
-            <p>Приветствуем, будущий мастер кода! 🧙‍♂️</p>
+            <p>Приветствуем, будущий мастер кода! <span class="pixel-emoji"></span></p>
+        </div>
 
         <div class="character-selection">
             <h3>Выбери своего героя:</h3>
             <div class="characters">
                 <div class="character selected" data-char="wizard">
-                    <div class="char-icon">🧙‍♂️</div>
+                    <i class="fa-solid fa-hat-wizard fa-pixel fa-character fa-blue"></i>
                     <span>Волшебник Кода</span>
                 </div>
                 <div class="character" data-char="hacker">
-                    <div class="char-icon">👨‍💻</div>
+                    <i class="fa-solid fa-laptop-code fa-pixel fa-character fa-blue"></i>
                     <span>Хакер</span>
                 </div>
                 <div class="character" data-char="robot">
-                    <div class="char-icon">🤖</div>
+                    <i class="fa-solid fa-robot fa-pixel fa-character fa-blue"></i>
                     <span>Робот-программист</span>
                 </div>
             </div>
         </div>
 
-        <a href="{% url 'game' %}" class="pixel-button start-button">🚀 Начать Квест!</a>
+       <a href="{% url 'game' %}" class="pixel-button start-button">
+            <i class="fa-solid fa-rocket fa-pixel fa-button fa-orange"></i>
+            <span class="button-text">НАЧАТЬ КВЕСТ</span>
+        </a>
+        
         <audio id="main-menu-music" loop>
             <source src="{% static 'quest_app/audio/main_menu_music.mp3' %}" type="audio/mpeg">
         </audio>
-    
-    <button id="mute-button" class="pixel-button" style="position: fixed; top: 20px; right: 20px;">🔊</button>
-
+        
+        <audio id="character-select-sound">
+            <source src="{% static 'quest_app/audio/character_select.mp3' %}" type="audio/mpeg">
+        </audio>
     </div>
 </div>
+
+<button id="mute-button" class="pixel-button sound-control-button">🔊</button>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const characters = document.querySelectorAll('.character');
+    const selectSound = document.getElementById('character-select-sound');
     let selectedChar = 'wizard';
     
     characters.forEach(char => {
@@ -51,7 +64,13 @@ document.addEventListener('DOMContentLoaded', function() {
             this.classList.add('selected');
             selectedChar = this.dataset.char;
             
-            // Можно сохранить выбор в localStorage или отправить на сервер
+            // Воспроизводим звук выбора
+            if (selectSound) {
+                selectSound.currentTime = 0;
+                selectSound.play().catch(() => {});
+            }
+            
+            // Сохраняем выбор
             localStorage.setItem('selectedCharacter', selectedChar);
         });
     });
@@ -63,6 +82,13 @@ document.addEventListener('DOMContentLoaded', function() {
             char.classList.remove('selected');
             if (char.dataset.char === savedChar) {
                 char.classList.add('selected');
+                // Воспроизводим звук при восстановлении выбора
+                if (selectSound && savedChar !== 'wizard') {
+                    setTimeout(() => {
+                        selectSound.currentTime = 0;
+                        selectSound.play().catch(() => {});
+                    }, 300);
+                }
             }
         });
     }

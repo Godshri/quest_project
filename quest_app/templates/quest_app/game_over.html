@@ -4,8 +4,10 @@
 {% block content %}
 <div class="game-over-screen">
     <div class="game-over-content">
-        <h2>💀 Игра Окончена</h2>
-        <div class="broken-heart">💔</div>
+        <h2><i class="fa-solid fa-skull fa-pixel fa-header fa-orange"></i> Игра Окончена</h2>
+        <div class="broken-heart">
+            <i class="fa-solid fa-heart-crack fa-pixel" style="font-size: 80px; color: #ff6b35;"></i>
+        </div>
         <p>Твои сердца закончились! Но каждый программист знает - ошибки это возможность учиться!</p>
         
         <div class="stats">
@@ -14,9 +16,12 @@
         </div>
 
         <div class="restart-options">
-            <button onclick="resetGame()" class="pixel-button">🔄 Начать Заново</button>
-            <a href="{% url 'index' %}" class="pixel-button">🏠 На Главную</a>
-            <button id="mute-button" class="pixel-button">🔊</button>
+            <button onclick="resetGame()" class="pixel-button">
+                <i class="fa-solid fa-rotate-right fa-pixel"></i> Начать Заново
+            </button>
+            <a href="{% url 'index' %}" class="pixel-button">
+                <i class="fa-solid fa-house fa-pixel"></i> На Главную
+            </a>
         </div>
     </div>
 </div>

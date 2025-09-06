@@ -5,9 +5,9 @@
 <div class="game-interface">
     <!-- Полоска жизней -->
     <div class="hearts-bar">
-        <span>Жизни: </span>
+    <span>Жизни: </span>
         {% for i in "x"|ljust:total_hearts %}
-            <span class="heart {% if forloop.counter0 >= player.hearts %}broken{% endif %}">❤️</span>
+            <i class="fa-solid fa-heart fa-pixel fa-heart {% if forloop.counter0 >= player.hearts %}broken{% endif %}"></i>
         {% endfor %}
     </div>
 
@@ -29,29 +29,37 @@
         <div class="puzzles">
             {% for puzzle in puzzles %}
             <div class="puzzle" data-difficulty="{{ puzzle.difficulty }}">
-                <h3>🧩 Уровень {{ puzzle.difficulty }}: {{ puzzle.name }}</h3>
+                <h3><i class="fa-solid fa-puzzle-piece fa-pixel fa-blue"></i> Уровень {{ puzzle.difficulty }}: {{ puzzle.name }}</h3>
                 <p>{{ puzzle.description }}</p>
                 <form class="puzzle-form" data-puzzle-id="{{ puzzle.id }}">
                     {% csrf_token %}
                     <input type="text" name="answer" class="pixel-input" placeholder="Твой ответ...">
-                    <button type="submit" class="pixel-button">🔍 Проверить</button>
+                    <button type="submit" class="pixel-button"><i class="fa-solid fa-magnifying-glass fa-pixel"></i> Проверить</button>
                 </form>
                 <div class="result-message"></div>
             </div>
             {% empty %}
             <div class="welcome-message">
                 <h3>Добро пожаловать в квест!</h3>
-                <p>Выбери комнату для начала приключения. Помни - у тебя есть жизней!</p>
+                <p>Выбери комнату для начала приключения. Помни - у тебя есть жизни!</p>
             </div>
             {% endfor %}
         </div>
     </div>
 
     <div class="navigation">
-        <button class="room-button" data-room="server">Серверная</button>
-        <button class="room-button" data-room="library">Библиотека</button>
-        <button class="room-button" data-room="arcade">Аркада</button>
-        <button class="room-button" data-room="roof" id="roof-button">Крыша</button>
+        <button class="room-button" data-room="server">
+            <i class="fa-solid fa-server fa-pixel"></i> Серверная
+        </button>
+        <button class="room-button" data-room="library">
+            <i class="fa-solid fa-book fa-pixel"></i> Библиотека
+        </button>
+        <button class="room-button" data-room="arcade">
+            <i class="fa-solid fa-gamepad fa-pixel"></i> Аркада
+        </button>
+        <button class="room-button" data-room="roof">
+            <i class="fa-solid fa-building fa-pixel"></i> Крыша
+        </button>
     </div>
 </div>
 
@@ -96,7 +104,7 @@ function changeRoomMusic(room) {
     // Включаем музыку для текущей комнаты
     const roomMusic = document.getElementById(`bg-music-${room}`);
     if (roomMusic) {
-        roomMusic.volume = 0.3; // Устанавливаем комфортную громкость
+        roomMusic.volume = 0.3;
         roomMusic.play().catch(e => console.log('Автовоспроизведение заблокировано:', e));
     }
 }
@@ -136,7 +144,5 @@ document.addEventListener('click', function() {
         roomMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
     }
 }, { once: true });
-// Остальной JavaScript код для игры...
 </script>
-
 {% endblock %}
