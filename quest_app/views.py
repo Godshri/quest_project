@@ -48,20 +48,31 @@ def game(request):
         if action == 'solve_puzzle':
             if player.hearts <= 0:
                 return JsonResponse({'success': False, 'hearts': 0, 'game_over': True})
-            
+
             puzzle_id = data.get('puzzle_id')
             answer = data.get('answer')
-            
+
+            # Проверяем, не решена ли уже эта загадка (более надежная проверка)
+            if str(puzzle_id) in player.solved_puzzles:
+                return JsonResponse({'success': True, 'already_solved': True})
+
             try:
                 puzzle = Puzzle.objects.get(id=puzzle_id)
-                
+
                 if answer.lower() == puzzle.solution.lower():
+                    # Добавляем загадку в решенные, если ее там еще нет
                     if str(puzzle_id) not in player.solved_puzzles:
                         player.solved_puzzles.append(str(puzzle_id))
                         player.save()
-                    return JsonResponse({'success': True})
+                    return JsonResponse({
+                        'success': True,
+                        'solved_count': len(player.solved_puzzles)  # Добавьте эту строку
+                    })
                 else:
+                    # Сохраняем текущее количество сердец перед вычитанием
+                    current_hearts = player.hearts
                     player.use_heart()
+                    # Возвращаем обновленное количество сердец
                     return JsonResponse({
                         'success': False, 
                         'hearts': player.hearts,
@@ -69,7 +80,6 @@ def game(request):
                     })
             except Puzzle.DoesNotExist:
                 return JsonResponse({'success': False, 'error': 'Puzzle not found'})
-        
         elif action == 'change_room':
             room = data.get('room')
             # Проверяем доступ к крыше
@@ -77,24 +87,56 @@ def game(request):
                 # Проверяем, что решено 9 загадок (3 комнаты по 3 загадки)
                 if len(player.solved_puzzles) < 9:
                     return JsonResponse({'success': False, 'message': 'Сначала решите все загадки в других комнатах!'})
-            
+
             player.current_room = room
             player.save()
-            return JsonResponse({'success': True})
+
+            # Возвращаем данные о новой комнате
+            puzzles_data = []
+            if room != 'start':
+                # Если для этой комнаты еще не назначены загадки, назначаем их
+                if room not in player.assigned_puzzles:
+                    room_puzzles = list(Puzzle.objects.filter(room=room))
+                    selected_puzzles = random.sample(room_puzzles, min(3, len(room_puzzles)))
+                    player.assigned_puzzles[room] = [str(p.id) for p in selected_puzzles]
+                    player.save()
+
+                # Получаем загадки для комнаты
+                assigned_ids = player.assigned_puzzles.get(room, [])
+                puzzles = Puzzle.objects.filter(id__in=assigned_ids)
+                puzzles_data = [{
+                    'id': p.id,
+                    'name': p.name,
+                    'description': p.description,
+                    'difficulty': p.difficulty,
+                    'solved': str(p.id) in player.solved_puzzles
+                } for p in puzzles]
+
+            return JsonResponse({
+                'success': True,
+                'room': room,
+                'room_name': ROOM_NAMES.get(room, room),
+                'puzzles': puzzles_data,
+                'solved_count': len(player.solved_puzzles),
+                'hearts': player.hearts
+            })
         
         elif action == 'reset_game':
             player.hearts = 5
             player.solved_puzzles = []
-            player.assigned_puzzles = {}
+            player.assigned_puzzles = {}  # Очищаем назначенные загадки
             player.current_room = 'start'
             player.completed = False
             player.save()
-            return JsonResponse({'success': True})
+            return JsonResponse({
+                'success': True,
+                'solved_count': len(player.solved_puzzles) 
+            })
     
     # Получаем загадки для текущей комнаты
     puzzles = []
     if player.current_room != 'start':
-        # Если для этой комнаты еще не назначены загадки, назначаем их
+        # Если для этой комнаты еще не назначены загадки, назначаем их случайным образом
         if player.current_room not in player.assigned_puzzles:
             room_puzzles = list(Puzzle.objects.filter(room=player.current_room))
             # Выбираем 3 случайные загадки для комнаты

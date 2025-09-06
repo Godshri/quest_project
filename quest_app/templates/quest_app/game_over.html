@@ -16,9 +16,6 @@
         </div>
 
         <div class="restart-options">
-            <button onclick="resetGame()" class="pixel-button">
-                <i class="fa-solid fa-rotate-right fa-pixel"></i> Начать Заново
-            </button>
             <a href="{% url 'index' %}" class="pixel-button">
                 <i class="fa-solid fa-house fa-pixel"></i> На Главную
             </a>
@@ -32,9 +29,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Воспроизводим музыку проигрыша
+    // Воспроизводим музыку проигрыша только если она еще не играет
     const gameOverMusic = document.getElementById('game-over-music');
-    if (gameOverMusic) {
+    if (gameOverMusic && gameOverMusic.paused) {
         gameOverMusic.volume = 0.3;
         gameOverMusic.play().catch(e => {
             console.log('Автовоспроизведение заблокировано');
@@ -61,21 +58,18 @@ document.addEventListener('DOMContentLoaded', function() {
             gameOverMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
         }
     }, { once: true });
-});
-
-function resetGame() {
+    
+    // Автоматически сбрасываем игру при проигрыше
     fetch('/game/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken')
+            'X-CSRFToken': document.getElementById('csrf-token').value
         },
         body: JSON.stringify({
             action: 'reset_game'
         })
-    }).then(() => {
-        location.reload();
-    });
-}
+    }).catch(error => console.log('Error resetting game:', error));
+});
 </script>
 {% endblock %}

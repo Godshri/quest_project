@@ -31,12 +31,22 @@
             <div class="puzzle" data-difficulty="{{ puzzle.difficulty }}">
                 <h3><i class="fa-solid fa-puzzle-piece fa-pixel fa-blue"></i> Уровень {{ puzzle.difficulty }}: {{ puzzle.name }}</h3>
                 <p>{{ puzzle.description }}</p>
-                <form class="puzzle-form" data-puzzle-id="{{ puzzle.id }}">
+                <form class="puzzle-form {% if puzzle.id|stringformat:'s' in player.solved_puzzles %}solved{% endif %}" 
+                      data-puzzle-id="{{ puzzle.id }}">
                     {% csrf_token %}
-                    <input type="text" name="answer" class="pixel-input" placeholder="Твой ответ...">
-                    <button type="submit" class="pixel-button"><i class="fa-solid fa-magnifying-glass fa-pixel"></i> Проверить</button>
+                    <input type="text" name="answer" class="pixel-input" 
+                           placeholder="Твой ответ..." 
+                           {% if puzzle.id|stringformat:'s' in player.solved_puzzles %}disabled{% endif %}>
+                    <button type="submit" class="pixel-button" 
+                            {% if puzzle.id|stringformat:'s' in player.solved_puzzles %}disabled{% endif %}>
+                        <i class="fa-solid fa-magnifying-glass fa-pixel"></i> Проверить
+                    </button>
                 </form>
-                <div class="result-message"></div>
+                <div class="result-message">
+                    {% if puzzle.id|stringformat:'s' in player.solved_puzzles %}
+                    ✅ Правильно! Загадка решена!
+                    {% endif %}
+                </div>
             </div>
             {% empty %}
             <div class="welcome-message">
@@ -59,6 +69,9 @@
         </button>
         <button class="room-button" data-room="roof">
             <i class="fa-solid fa-building fa-pixel"></i> Крыша
+        </button>
+        <button id="reset-button" class="pixel-button">
+            <i class="fa-solid fa-rotate-right fa-pixel"></i> Сбросить игру
         </button>
     </div>
 </div>
@@ -92,51 +105,46 @@
 </div>
 
 <script>
-// Функция для смены музыки в зависимости от комнаты
-function changeRoomMusic(room) {
-    // Останавливаем все музыки
-    const allMusic = document.querySelectorAll('audio[id^="bg-music-"]');
-    allMusic.forEach(audio => {
-        audio.pause();
-        audio.currentTime = 0;
-    });
+document.addEventListener('DOMContentLoaded', function() {
+    // Воспроизводим музыку текущей комнаты
+    const currentRoom = '{{ room }}';
+    changeRoomMusic(currentRoom);
     
+    // Управление звуком
+    let isMuted = false;
+    const muteButton = document.getElementById('mute-button');
+
+    if (muteButton) {
+        muteButton.addEventListener('click', function() {
+            isMuted = !isMuted;
+            const allAudio = document.querySelectorAll('audio');
+            allAudio.forEach(audio => {
+                audio.muted = isMuted;
+            });
+            muteButton.textContent = isMuted ? '🔇' : '🔊';
+        });
+    }
+});
+
+// Функция для смены музыки (должна быть глобальной)
+function changeRoomMusic(room) {
+    // Останавливаем текущую музыку
+    const allAudio = document.querySelectorAll('audio');
+    allAudio.forEach(audio => {
+        if (!audio.id.includes('success') && !audio.id.includes('fail')) {
+            audio.pause();
+            audio.currentTime = 0;
+        }
+    });
+
     // Включаем музыку для текущей комнаты
     const roomMusic = document.getElementById(`bg-music-${room}`);
     if (roomMusic) {
         roomMusic.volume = 0.3;
-        roomMusic.play().catch(e => console.log('Автовоспроизведение заблокировано:', e));
-    }
-}
-
-// Воспроизводим музыку текущей комнаты при загрузке
-document.addEventListener('DOMContentLoaded', function() {
-    const currentRoom = '{{ room }}';
-    changeRoomMusic(currentRoom);
-});
-
-// Управление звуком
-let isMuted = false;
-const muteButton = document.getElementById('mute-button');
-
-if (muteButton) {
-    muteButton.addEventListener('click', function() {
-        isMuted = !isMuted;
-        const allAudio = document.querySelectorAll('audio');
-        allAudio.forEach(audio => {
-            audio.muted = isMuted;
+        roomMusic.play().catch(e => {
+            console.log('Автовоспроизведение музыки заблокировано:', e);
         });
-        muteButton.textContent = isMuted ? '🔇' : '🔊';
-    });
-}
-
-// Автовоспроизведение с пользовательским взаимодействием
-document.addEventListener('click', function() {
-    const currentRoom = '{{ room }}';
-    const roomMusic = document.getElementById(`bg-music-${currentRoom}`);
-    if (roomMusic && roomMusic.paused) {
-        roomMusic.play().catch(e => console.log('Ошибка воспроизведения:', e));
     }
-}, { once: true });
+}
 </script>
 {% endblock %}

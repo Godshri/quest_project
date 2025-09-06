@@ -11,9 +11,6 @@
     <p>С Днем Программиста!</p>
     
     <div class="victory-actions">
-        <a href="{% url 'game' %}" class="pixel-button">
-            <i class="fa-solid fa-rotate-right fa-pixel"></i> Играть снова
-        </a>
         <a href="{% url 'index' %}" class="pixel-button">
             <i class="fa-solid fa-house fa-pixel"></i> На главную
         </a>
@@ -26,9 +23,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Воспроизводим победную музыку
+    // Воспроизводим победную музыку только если она еще не играет
     const victoryMusic = document.getElementById('victory-music');
-    if (victoryMusic) {
+    if (victoryMusic && victoryMusic.paused) {
         victoryMusic.volume = 0.4;
         victoryMusic.play().catch(e => {
             console.log('Автовоспроизведение заблокировано, ждем клика');
