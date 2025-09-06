@@ -5,6 +5,7 @@ class Player(models.Model):
     current_room = models.CharField(max_length=50, default='start')
     hearts = models.IntegerField(default=5)
     solved_puzzles = models.JSONField(default=list)
+    assigned_puzzles = models.JSONField(default=dict)  # Новое поле для хранения назначенных загадок
     created_at = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
 
@@ -12,14 +13,6 @@ class Player(models.Model):
         self.hearts -= 1
         self.save()
         return self.hearts > 0
-
-    def get_random_puzzles(self, room, count=3):
-        # Используем правильный способ получения модели
-        from .models import Puzzle
-        puzzles = list(Puzzle.objects.filter(room=room))
-        if len(puzzles) <= count:
-            return puzzles
-        return random.sample(puzzles, min(count, len(puzzles)))
 
     def __str__(self):
         return f"Player {self.id} - {self.current_room}"

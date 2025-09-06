@@ -113,28 +113,22 @@ function changeRoomMusic(room) {
 document.addEventListener('DOMContentLoaded', function() {
     const currentRoom = '{{ room }}';
     changeRoomMusic(currentRoom);
-    
-    // Обработчик смены комнаты
-    document.querySelectorAll('.room-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const newRoom = this.dataset.room;
-            changeRoomMusic(newRoom);
-        });
-    });
 });
 
 // Управление звуком
 let isMuted = false;
 const muteButton = document.getElementById('mute-button');
 
-muteButton.addEventListener('click', function() {
-    isMuted = !isMuted;
-    const allAudio = document.querySelectorAll('audio');
-    allAudio.forEach(audio => {
-        audio.muted = isMuted;
+if (muteButton) {
+    muteButton.addEventListener('click', function() {
+        isMuted = !isMuted;
+        const allAudio = document.querySelectorAll('audio');
+        allAudio.forEach(audio => {
+            audio.muted = isMuted;
+        });
+        muteButton.textContent = isMuted ? '🔇' : '🔊';
     });
-    muteButton.textContent = isMuted ? '🔇' : '🔊';
-});
+}
 
 // Автовоспроизведение с пользовательским взаимодействием
 document.addEventListener('click', function() {
