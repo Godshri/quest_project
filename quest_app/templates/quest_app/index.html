@@ -4,7 +4,7 @@
 {% block content %}
 <div class="start-screen">
     <div class="pixel-welcome">
-         <h2>
+        <h2>
             <i class="fa-solid fa-gamepad fa-pixel fa-headered fa-blue"></i>
             Приключение Программиста
             <i class="fa-solid fa-dragon fa-pixel fa-headered fa-orange"></i>
@@ -12,7 +12,71 @@
         <div class="pixel-divider"></div>
         
         <div class="game-description">
-            <p>Приветствуем, будущий мастер кода! <span class="pixel-emoji"></span></p>
+            <p>Добро пожаловать в Digital-квест от Кванториума! <span class="pixel-emoji">🚀</span></p>
+            <p>Тебя ждет увлекательное путешествие по миру технологий, где ты сможешь проявить свои навыки и логическое мышление.</p>
+        </div>
+
+        <!-- Блок с правилами игры -->
+        <div class="game-rules">
+            <h3><i class="fa-solid fa-book fa-pixel fa-blue"></i> Правила игры:</h3>
+            <div class="rules-list">
+                <div class="rule-item">
+                    <i class="fa-solid fa-heart fa-pixel fa-red"></i>
+                    <span>У тебя есть <strong>5 сердец</strong> - не теряй их все!</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fa-solid fa-puzzle-piece fa-pixel fa-orange"></i>
+                    <span>Всего <strong>12 загадок</strong> в 4 разных комнатах</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fa-solid fa-lock fa-pixel fa-blue"></i>
+                    <span>Комната "Крыша" откроется после решения 9 загадок</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fa-solid fa-warning fa-pixel fa-yellow"></i>
+                    <span>Не переключай вкладку - игра может сброситься!</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок со структурой квеста -->
+        <div class="quest-structure">
+            <h3><i class="fa-solid fa-map fa-pixel fa-green"></i> Структура квеста:</h3>
+            <div class="rooms-grid">
+                <div class="room-card">
+                    <i class="fa-solid fa-server fa-pixel fa-blue"></i>
+                    <h4>Серверная</h4>
+                    <p>3 загадки про железо и сети</p>
+                </div>
+                <div class="room-card">
+                    <i class="fa-solid fa-book fa-pixel fa-brown"></i>
+                    <h4>Библиотека</h4>
+                    <p>3 загадки про историю IT</p>
+                </div>
+                <div class="room-card">
+                    <i class="fa-solid fa-gamepad fa-pixel fa-purple"></i>
+                    <h4>Аркада</h4>
+                    <p>3 загадки про игры и алгоритмы</p>
+                </div>
+                <div class="room-card">
+                    <i class="fa-solid fa-building fa-pixel fa-gray"></i>
+                    <h4>Крыша</h4>
+                    <p>3 финальные загадки про будущее</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок с наградами -->
+        <div class="rewards-info">
+            <h3><i class="fa-solid fa-trophy fa-pixel fa-gold"></i> Награда за победу:</h3>
+            <div class="reward-content">
+                <p>После прохождения всех 12 загадок ты получишь:</p>
+                <ul>
+                    <li><i class="fa-solid fa-certificate fa-pixel fa-blue"></i> Уникальный код победителя</li>
+                    <li><i class="fa-solid fa-gift fa-pixel fa-red"></i> Возможность получить приз в Кванториуме</li>
+                    <li><i class="fa-solid fa-star fa-pixel fa-yellow"></i> Сертификат Digital-квеста</li>
+                </ul>
+            </div>
         </div>
 
         <div class="character-selection">
@@ -33,9 +97,9 @@
             </div>
         </div>
 
-       <a href="{% url 'game' %}" class="pixel-button start-button">
+        <a href="{% url 'game' %}" class="pixel-button start-button">
             <i class="fa-solid fa-rocket fa-pixel fa-button fa-orange"></i>
-            <span class="button-text">НАЧАТЬ КВЕСТ</span>
+            <span class="button-text">НАЧАТЬ ПРИКЛЮЧЕНИЕ</span>
         </a>
         
         <audio id="main-menu-music" loop>
@@ -50,6 +114,7 @@
 
 <button id="mute-button" class="pixel-button sound-control-button">🔊</button>
 
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const characters = document.querySelectorAll('.character');
@@ -58,31 +123,25 @@ document.addEventListener('DOMContentLoaded', function() {
     
     characters.forEach(char => {
         char.addEventListener('click', function() {
-            // Убираем выделение у всех
             characters.forEach(c => c.classList.remove('selected'));
-            // Добавляем выделение выбранному
             this.classList.add('selected');
             selectedChar = this.dataset.char;
             
-            // Воспроизводим звук выбора
             if (selectSound) {
                 selectSound.currentTime = 0;
                 selectSound.play().catch(() => {});
             }
             
-            // Сохраняем выбор
             localStorage.setItem('selectedCharacter', selectedChar);
         });
     });
     
-    // Восстанавливаем выбор при загрузке
     const savedChar = localStorage.getItem('selectedCharacter');
     if (savedChar) {
         characters.forEach(char => {
             char.classList.remove('selected');
             if (char.dataset.char === savedChar) {
                 char.classList.add('selected');
-                // Воспроизводим звук при восстановлении выбора
                 if (selectSound && savedChar !== 'wizard') {
                     setTimeout(() => {
                         selectSound.currentTime = 0;

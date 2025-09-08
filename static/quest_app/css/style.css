@@ -794,6 +794,244 @@ h1 {
   font-size: var(--font-size-md);
 }
 
+.game-rules, .quest-structure, .rewards-info {
+    background: var(--color-bg-tertiary);
+    border: var(--border-width-lg) solid var(--color-accent-blue);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xl) 0;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-rules::before, .quest-structure::before, .rewards-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--color-accent-orange), 
+        var(--color-accent-blue), 
+        var(--color-accent-orange));
+}
+
+.game-rules h3, .quest-structure h3, .rewards-info h3 {
+    color: var(--color-accent-orange);
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    font-size: var(--font-size-xl);
+    text-shadow: 2px 2px 0 #000;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+.game-rules h3 i, .quest-structure h3 i, .rewards-info h3 i {
+    margin-right: var(--spacing-sm);
+}
+
+.rules-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.rule-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--color-bg-quaternary);
+    border-radius: var(--border-radius-md);
+    border: var(--border-width-md) solid var(--color-accent-blue);
+    transition: all var(--transition-normal);
+    image-rendering: pixelated;
+}
+
+.rule-item:hover {
+    border-color: var(--color-accent-orange);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.rule-item i {
+    font-size: var(--font-size-xxl);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius-sm);
+    border: var(--border-width-sm) solid currentColor;
+}
+
+.rule-item span {
+    flex: 1;
+    font-size: var(--font-size-md);
+    line-height: 1.4;
+}
+
+/* Улучшенный дизайн для блока с комнатами */
+.quest-structure {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-accent-orange);
+}
+
+.rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.room-card {
+    background: linear-gradient(135deg, var(--color-bg-tertiary), var(--color-bg-quaternary));
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    border: var(--border-width-md) solid var(--color-accent-blue);
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+    image-rendering: pixelated;
+}
+
+.room-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--color-accent-orange);
+}
+
+.room-card:hover {
+    border-color: var(--color-accent-orange);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-glow);
+}
+
+.room-card i {
+    font-size: 2.5em;
+    margin-bottom: var(--spacing-md);
+    display: block;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.room-card h4 {
+    margin: var(--spacing-sm) 0;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #000;
+}
+
+.room-card p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-primary);
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Специфичные стили для каждой комнаты */
+.room-card:nth-child(1) { /* Серверная */
+    border-color: #4cc9f0;
+}
+.room-card:nth-child(1)::before {
+    background: #4cc9f0;
+}
+
+.room-card:nth-child(2) { /* Библиотека */
+    border-color: #d39e76;
+}
+.room-card:nth-child(2)::before {
+    background: #d39e76;
+}
+
+.room-card:nth-child(3) { /* Аркада */
+    border-color: #a29bfe;
+}
+.room-card:nth-child(3)::before {
+    background: #a29bfe;
+}
+
+.room-card:nth-child(4) { /* Крыша */
+    border-color: #b2bec3;
+}
+.room-card:nth-child(4)::before {
+    background: #b2bec3;
+}
+
+/* Стили для блока наград */
+.rewards-info {
+    background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-bg-tertiary));
+    border-color: var(--color-accent-orange);
+}
+
+.reward-content {
+    text-align: center;
+}
+
+.reward-content p {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-accent-blue);
+    font-size: var(--font-size-lg);
+    font-weight: bold;
+}
+
+.reward-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.reward-content li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--color-bg-quaternary);
+    border-radius: var(--border-radius-md);
+    border: var(--border-width-md) solid var(--color-accent-orange);
+    transition: all var(--transition-normal);
+}
+
+.reward-content li:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.reward-content li i {
+    font-size: var(--font-size-xxl);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: var(--border-radius-sm);
+    border: var(--border-width-sm) solid currentColor;
+}
+
+.reward-content li span {
+    flex: 1;
+    text-align: left;
+    font-size: var(--font-size-md);
+}
+
 @keyframes pixel-blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
@@ -911,6 +1149,35 @@ h1 {
   .hashtag {
     width: fit-content;
   }
+  .rooms-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+    }
+    
+    .room-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .room-card i {
+        font-size: 1.5em;
+    }
+    
+    .room-card h4 {
+        font-size: var(--font-size-sm);
+    }
+    
+    .room-card p {
+        font-size: var(--font-size-xs);
+    }
+    
+    .rules-list, .reward-content ul {
+        gap: var(--spacing-xs);
+    }
+    
+    .rule-item, .reward-content li {
+        padding: var(--spacing-xs);
+        font-size: var(--font-size-sm);
+    }
 }
 
 @media (max-width: 480px) {
@@ -983,4 +1250,23 @@ h1 {
     font-size: var(--font-size-lg);
     margin-right: 6px;
   }
+  
+  .rooms-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .game-rules, .quest-structure, .rewards-info {
+        padding: var(--spacing-md);
+        margin: var(--spacing-md) 0;
+    }
+    
+    .rule-item, .reward-content li {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-xs);
+    }
+    
+    .rule-item i, .reward-content li i {
+        margin-bottom: var(--spacing-xs);
+    }
 }

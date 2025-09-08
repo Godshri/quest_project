@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-2_)qss^m9_s#5a%jg+#sj6sv6rxcpi5mp(dpv7p17ft0xnhyea
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'kvantorium64.pythonanywhere.com',
+    'localhost',
+    '127.0.0.1',
+    # add any other domains you need
+]
 
 
 # Application definition
