@@ -1,6 +1,96 @@
+let gameResetTimer = null;
+const RESET_TIMEOUT = 2000; // 2 секунды на возврат
+
+// Функция для сброса игры
+async function resetGameOnTabChange() {
+    try {
+        const csrfToken = getCSRFToken();
+        const response = await fetch('/game/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({
+                action: 'reset_game'
+            })
+        });
+        
+        console.log('Game reset due to tab change/browser close');
+    } catch (error) {
+        console.error('Error resetting game:', error);
+    }
+}
+
+// Функция для обработки видимости страницы
+function handleVisibilityChange() {
+    if (document.hidden) {
+        // Пользователь переключил вкладку или свернул браузер
+        console.log('Tab hidden - starting reset timer');
+        gameResetTimer = setTimeout(() => {
+            resetGameOnTabChange();
+        }, RESET_TIMEOUT);
+    } else {
+        // Пользователь вернулся на вкладку
+        console.log('Tab visible - canceling reset timer');
+        if (gameResetTimer) {
+            clearTimeout(gameResetTimer);
+            gameResetTimer = null;
+        }
+    }
+}
+
+// Функция для обработки закрытия браузера/вкладки
+function handleBeforeUnload(e) {
+    // Сбрасываем игру сразу при попытке закрыть вкладку
+    e.preventDefault();
+    
+    // Отправляем синхронный запрос для сброса
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/game/', false); // false для синхронного запроса
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', getCSRFToken());
+    xhr.send(JSON.stringify({
+        action: 'reset_game'
+    }));
+    
+    // Стандартное сообщение о закрытии
+    e.returnValue = 'Ваш прогресс будет потерян!';
+    return e.returnValue;
+}
+
+// Инициализация защиты
+function initAntiCheatProtection() {
+    // Слушаем изменения видимости страницы
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    // Слушаем попытки закрытия страницы
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    // Слушаем уход со страницы
+    window.addEventListener('pagehide', resetGameOnTabChange);
+    
+    // Слушаем потерю фокуса (пользователь переключился на другое окно)
+    window.addEventListener('blur', function() {
+        console.log('Window lost focus - starting reset timer');
+        gameResetTimer = setTimeout(() => {
+            resetGameOnTabChange();
+        }, RESET_TIMEOUT);
+    });
+    
+    // Слушаем возвращение фокуса
+    window.addEventListener('focus', function() {
+        console.log('Window gained focus - canceling reset timer');
+        if (gameResetTimer) {
+            clearTimeout(gameResetTimer);
+            gameResetTimer = null;
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Game script loaded');
-    
+    initAntiCheatProtection();
     // Функция для получения CSRF токена
     function getCSRFToken() {
         const hiddenField = document.getElementById('csrf-token');
@@ -14,6 +104,28 @@ document.addEventListener('DOMContentLoaded', function() {
             ?.split('=')[1];
         return cookieValue;
     }
+
+        // Запрет копирования текста вопросов
+    document.addEventListener('copy', function(e) {
+        if (e.target.closest('.puzzle')) {
+            e.preventDefault();
+            alert('Копирование текста загадок запрещено!');
+        }
+    });
+    
+    // Запрет правого клика
+    document.addEventListener('contextmenu', function(e) {
+        if (e.target.closest('.puzzle')) {
+            e.preventDefault();
+            alert('Правый клик на загадках запрещен!');
+        }
+    });
+    
+    // Запрет выделения текста в загадках
+    document.querySelectorAll('.puzzle').forEach(puzzle => {
+        puzzle.style.userSelect = 'none';
+        puzzle.style.webkitUserSelect = 'none';
+    });
     
     // Глобальная переменная для отслеживания текущей музыки
     let currentMusic = null;

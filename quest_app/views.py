@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import Player, Puzzle
 import json
 import random
+from django.utils import timezone
 
 ROOM_NAMES = {
     'server': 'Серверная',
@@ -35,6 +36,20 @@ def game(request):
     else:
         player = Player.objects.create()
         request.session['player_id'] = player.id
+    
+    
+    if not player.check_activity():
+        # Игрок неактивен - сбрасываем игру
+        player.hearts = 5
+        player.solved_puzzles = []
+        player.assigned_puzzles = {}
+        player.current_room = 'start'
+        player.completed = False
+        player.is_active = True
+    
+    # Обновляем время последней активности
+    player.last_activity = timezone.now()
+    player.save()
     
     # Инициализируем assigned_puzzles если их нет
     if not player.assigned_puzzles:

@@ -1,5 +1,7 @@
 from django.db import models
 import random
+from django.utils import timezone
+from datetime import timedelta
 
 class Player(models.Model):
     current_room = models.CharField(max_length=50, default='start')
@@ -8,8 +10,14 @@ class Player(models.Model):
     assigned_puzzles = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
-    victory_code = models.CharField(max_length=50, blank=True, null=True)  # Новое поле для кода победы
+    victory_code = models.CharField(max_length=50, blank=True, null=True) 
+    last_activity = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
 
+    def check_activity(self):
+        """Проверяет, активен ли игрок (в пределах 5 минут)"""
+        return timezone.now() - self.last_activity < timedelta(minutes=5)
+    
     def use_heart(self):
         self.hearts -= 1
         self.save()
