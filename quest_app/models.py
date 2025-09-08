@@ -5,9 +5,10 @@ class Player(models.Model):
     current_room = models.CharField(max_length=50, default='start')
     hearts = models.IntegerField(default=5)
     solved_puzzles = models.JSONField(default=list)
-    assigned_puzzles = models.JSONField(default=dict)  # Новое поле для хранения назначенных загадок
+    assigned_puzzles = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     completed = models.BooleanField(default=False)
+    victory_code = models.CharField(max_length=50, blank=True, null=True)  # Новое поле для кода победы
 
     def use_heart(self):
         self.hearts -= 1

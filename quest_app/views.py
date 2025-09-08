@@ -170,8 +170,17 @@ def victory(request):
             # Проверяем, что решены все 12 загадок
             if len(player.solved_puzzles) >= 12:
                 player.completed = True
-                player.save()
-                return render(request, 'quest_app/victory.html', {'player': player})
+                
+                # Генерируем или получаем существующий код победы
+                if not player.victory_code:
+                    from .id_generator import generate_kvant_id
+                    player.victory_code = generate_kvant_id()
+                    player.save()
+                
+                return render(request, 'quest_app/victory.html', {
+                    'player': player,
+                    'unique_id': player.victory_code
+                })
         except Player.DoesNotExist:
             pass
     return redirect('game')

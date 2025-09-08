@@ -674,6 +674,83 @@ h1 {
     color: #ffffff;
 }
 
+.victory-content {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.unique-id-card {
+    background: rgba(42, 42, 74, 0.8);
+    border: 3px solid #4cc9f0;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px auto;
+    max-width: 600px;
+    box-shadow: 0 0 20px rgba(76, 201, 240, 0.4);
+}
+
+.id-display {
+    background: #1a1a3a;
+    border: 2px solid #ff6b35;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    color: #4cc9f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    word-break: break-all;
+}
+
+.copy-btn {
+    padding: 8px 12px;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+.id-instructions {
+    color: #ff6b35;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.social-share {
+    margin: 20px 0;
+}
+
+.hashtags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.hashtag {
+    background: rgba(255, 107, 53, 0.2);
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: 1px solid #ff6b35;
+    color: #ff8c53;
+    font-weight: bold;
+}
+
+.call-to-action {
+    background: rgba(76, 201, 240, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #4cc9f0;
+    margin: 20px 0;
+}
+
+.victory-message p {
+    margin: 15px 0;
+    line-height: 1.6;
+    font-size: 16px;
+}
+
 
 /* Анимации */
 @keyframes pixel-blink {
@@ -779,6 +856,20 @@ h1 {
         padding: 12px 20px;
         font-size: 16px;
         min-width: auto;
+    }
+
+     .id-display {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .hashtags {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .hashtag {
+        width: fit-content;
     }
 
 }
