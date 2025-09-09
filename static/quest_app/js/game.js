@@ -40,32 +40,32 @@ function handleVisibilityChange() {
     }
 }
 
-// Функция для обработки закрытия браузера/вкладки
-function handleBeforeUnload(e) {
-    // Сбрасываем игру сразу при попытке закрыть вкладку
-    e.preventDefault();
+// // Функция для обработки закрытия браузера/вкладки
+// function handleBeforeUnload(e) {
+//     // Сбрасываем игру сразу при попытке закрыть вкладку
+//     e.preventDefault();
     
-    // Отправляем синхронный запрос для сброса
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/game/', false); // false для синхронного запроса
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('X-CSRFToken', getCSRFToken());
-    xhr.send(JSON.stringify({
-        action: 'reset_game'
-    }));
+//     // Отправляем синхронный запрос для сброса
+//     const xhr = new XMLHttpRequest();
+//     xhr.open('POST', '/game/', false); // false для синхронного запроса
+//     xhr.setRequestHeader('Content-Type', 'application/json');
+//     xhr.setRequestHeader('X-CSRFToken', getCSRFToken());
+//     xhr.send(JSON.stringify({
+//         action: 'reset_game'
+//     }));
     
-    // Стандартное сообщение о закрытии
-    e.returnValue = 'Ваш прогресс будет потерян!';
-    return e.returnValue;
-}
+//     // Стандартное сообщение о закрытии
+//     e.returnValue = 'Ваш прогресс будет потерян!';
+//     return e.returnValue;
+// }
 
 // Инициализация защиты
 function initAntiCheatProtection() {
     // Слушаем изменения видимости страницы
     document.addEventListener('visibilitychange', handleVisibilityChange);
     
-    // Слушаем попытки закрытия страницы
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    // // Слушаем попытки закрытия страницы
+    // window.addEventListener('beforeunload', handleBeforeUnload);
     
     // Слушаем уход со страницы
     window.addEventListener('pagehide', resetGameOnTabChange);

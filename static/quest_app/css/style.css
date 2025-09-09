@@ -1270,3 +1270,368 @@ h1 {
         margin-bottom: var(--spacing-xs);
     }
 }
+
+/* Добавьте эти стили в конец вашего файла style.css */
+
+/* Улучшения для мобильной адаптивности */
+@media (max-width: 768px) {
+  body {
+    padding: 8px;
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  .container {
+    padding: 12px;
+    margin: 8px;
+    border-width: 3px;
+  }
+  
+  h1 {
+    font-size: 1.8em;
+    text-shadow: 2px 2px 0 var(--color-accent-orange);
+    line-height: 1.2;
+    padding: 0 10px;
+  }
+  
+  .pixel-header, .pixel-footer {
+    margin-bottom: 20px;
+  }
+  
+  /* Улучшенная навигация */
+  .navigation {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .room-button {
+    padding: 12px;
+    font-size: 14px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .room-button i {
+    font-size: 18px;
+  }
+  
+  /* Улучшенные комнаты */
+  .room {
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .room-image-wrapper {
+    margin-bottom: 15px;
+  }
+  
+  .room-image {
+    width: 100%;
+    height: 250px;
+    max-width: 300px;
+  }
+  
+  /* Улучшенные головоломки */
+  .puzzle {
+    padding: 15px;
+    margin: 15px 0;
+  }
+  
+  .puzzle-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .pixel-input {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    font-size: 16px; /* Увеличиваем для удобства ввода на мобильных */
+    min-height: 44px; /* Минимальная высота для touch */
+  }
+  
+  .pixel-button {
+    min-height: 44px; /* Минимальная высота для touch */
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+  
+  /* Улучшенный экран начала */
+  .start-screen {
+    padding: 15px;
+  }
+  
+  .pixel-welcome {
+    max-width: 100%;
+  }
+  
+  .game-rules, .quest-structure, .rewards-info {
+    padding: 20px 15px;
+    margin: 20px 0;
+  }
+  
+  .rules-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .rule-item {
+    padding: 12px;
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .rule-item i {
+    margin: 0 auto;
+  }
+  
+  .rooms-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .room-card {
+    padding: 15px;
+  }
+  
+  .room-card i {
+    font-size: 2em;
+    height: 50px;
+  }
+  
+  .character-selection {
+    padding: 20px 15px;
+    margin: 20px 0;
+  }
+  
+  .characters {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .character {
+    padding: 15px;
+    min-width: auto;
+  }
+  
+  .start-button {
+    font-size: 18px;
+    padding: 15px 25px;
+    margin: 20px 0;
+  }
+  
+  /* Улучшенный прогресс бар */
+  .progress-bar {
+    height: 28px;
+  }
+  
+  .progress-text {
+    line-height: 28px;
+    font-size: 14px;
+  }
+  
+  /* Улучшенные сердца */
+  .hearts-bar {
+    padding: 10px;
+  }
+  
+  .heart {
+    font-size: 24px;
+    margin: 0 5px;
+  }
+  
+  /* Улучшенная победа */
+  .victory {
+    padding: 20px 15px;
+  }
+  
+  .victory h2 {
+    font-size: 2em;
+  }
+  
+  .unique-id-card {
+    padding: 20px 15px;
+    margin: 20px 0;
+  }
+  
+  .id-display {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .copy-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  .hashtags {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hashtag {
+    width: fit-content;
+  }
+  
+  .victory-actions {
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 15px;
+  }
+  
+  .victory-actions .pixel-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 5px;
+  }
+  
+  .container {
+    padding: 10px;
+    margin: 5px;
+    border-width: 2px;
+  }
+  
+  h1 {
+    font-size: 1.5em;
+    padding: 0 5px;
+  }
+  
+  .room-image {
+    height: 200px;
+  }
+  
+  .puzzle h3 {
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  
+  .game-rules h3, .quest-structure h3, .rewards-info h3 {
+    font-size: 18px;
+  }
+  
+  .rule-item span, .reward-content li span {
+    font-size: 14px;
+  }
+  
+  .room-card h4 {
+    font-size: 16px;
+  }
+  
+  .room-card p {
+    font-size: 13px;
+  }
+  
+  .start-button {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+  
+  /* Предотвращение масштабирования при фокусе на iOS */
+  @media (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+  
+  /* Улучшение touch targets */
+  .pixel-button, .room-button, .character, .copy-btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Предотвращение выделения при тапе */
+  .pixel-button, .room-button, .character {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  
+  /* Улучшение скролла на iOS */
+  .container {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Дополнительные улучшения для очень маленьких устройств */
+@media (max-width: 320px) {
+  .room-image {
+    height: 180px;
+  }
+  
+  .pixel-button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+  
+  .room-button {
+    font-size: 12px;
+    padding: 10px;
+  }
+  
+  .rule-item, .reward-content li {
+    padding: 10px;
+  }
+}
+
+/* Фикс для Safari на iOS */
+@supports (-webkit-touch-callout: none) {
+  .container {
+    min-height: -webkit-fill-available;
+  }
+  
+  .pixel-button, .room-button {
+    cursor: pointer;
+  }
+}
+
+/* Предотвращение zoom при фокусе на iOS */
+@media screen and (max-width: 768px) {
+  input[type="text"]:focus {
+    font-size: 16px !important;
+  }
+}
+
+/* Улучшение читаемости текста на маленьких экранах */
+@media (max-width: 768px) {
+  p, li, span {
+    line-height: 1.5;
+  }
+  
+  .game-description p, .victory-message p {
+    text-align: justify;
+    hyphens: auto;
+  }
+}
+
+/* Улучшение отображения иконок на мобильных */
+@media (max-width: 768px) {
+  .fa-pixel {
+    transform: translateZ(0); /* Аппаратное ускорение */
+    backface-visibility: hidden;
+  }
+  
+  .fa-headered {
+    font-size: 24px;
+    margin: 0 8px;
+  }
+  
+  .fa-character {
+    font-size: 32px;
+  }
+  
+  .fa-button {
+    font-size: 20px;
+  }
+}
